@@ -8,7 +8,7 @@ import {
   VerifiedRegistrationResponse, verifyAuthenticationResponse,
   verifyRegistrationResponse
 } from '@simplewebauthn/server';
-import { isoUint8Array } from '@simplewebauthn/server/helpers';
+import { isoUint8Array, isoBase64URL } from '@simplewebauthn/server/helpers';
 import {DevicePasskey} from './src/types';
 import {convertAuthenticator, getAuthenticatorData, getDeviceRegistrationInfo} from './src/server/utils';
 
@@ -34,15 +34,16 @@ app.get('/*', async (ctx: Context): Promise<Response> => {
 	});
 });
 
-app.post('/register/start', async (ctx: Context): Promise<Response> => {
-  const { user } = ctx.body;
+app.post('/register/start', async (ctx: Context): Promise<any> => {
+  const { user } = ctx.body as any;
 
   const dbUser = await addUser(user);
 
   const options = await generateRegistrationOptions({
     rpName,
     rpID,
-    userID: isoUint8Array.fromUTF8String(dbUser._id.toString()),
+    userID: isoUint8Array.fromUTF8String(dbUser.email),
+    // userID: dbUser._id.toString(),
     userName: dbUser.email,
     attestationType: 'none',
   });
@@ -54,8 +55,8 @@ app.post('/register/start', async (ctx: Context): Promise<Response> => {
   };
 });
 
-app.post('/register/finish', async (ctx: Context): Promise<Response> => {
-  const { userName, data } = ctx.body;
+app.post('/register/finish', async (ctx: Context): Promise<any> => {
+  const { userName, data } = ctx.body as any;
 
   let verification: VerifiedRegistrationResponse;
   const user = await getUserByEmail(userName);
@@ -92,20 +93,19 @@ app.post('/register/finish', async (ctx: Context): Promise<Response> => {
 });
 
 
-app.post('/login/start', async (ctx: Context): Promise<Response> => {
-  const { userName } = ctx.body;
+app.post('/login/start', async (ctx: Context): Promise<any> => {
+  const { userName } = ctx.body as any;
 
   const user = await getUserByEmail(userName);
   if(!user) {
     return ctx.error(400, { error: 'Invalid user'});
   }
   try {
-    const args = {
+    const options = await generateAuthenticationOptions({
       allowCredentials: user.credentials.map(convertAuthenticator),
       rpID,
       userVerification: 'required',
-    }
-    const options = await generateAuthenticationOptions(args);
+    });
     await updateUserChallenge(userName, options.challenge);
     return {
       options,
@@ -116,8 +116,8 @@ app.post('/login/start', async (ctx: Context): Promise<Response> => {
   }
 });
 
-app.post('/login/finish', async (ctx: Context): Promise<Response> => {
-  const { userName, data } = ctx.body;
+app.post('/login/finish', async (ctx: Context): Promise<any> => {
+  const { userName, data } = ctx.body as any;
 
   console.log(userName);
   console.log(data);
@@ -137,7 +137,7 @@ app.post('/login/finish', async (ctx: Context): Promise<Response> => {
   const { verified } = verification;
   if(verified) {
     return {
-      status: 'OK',
+      status: 'OK'
     }
   }
   return ctx.error(401, { status: 'Failed Auth' });

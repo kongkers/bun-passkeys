@@ -20,10 +20,10 @@ type SignUpProps = {
 }
 
 const USER_DETAILS_DEFAULTS: User = {
-  firstName: '',
-  lastName: '',
-  email: '',
-  mobile: '',
+  firstName: 'David',
+  lastName: 'Kong',
+  email: 'davkon@gmail.com',
+  mobile: '0408540199',
 }
 
 export default function SignUp(props: SignUpProps): ReactElement {

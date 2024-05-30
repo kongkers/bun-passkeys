@@ -1,19 +1,11 @@
 import {VerifiedRegistrationResponse} from '@simplewebauthn/server';
 import {DevicePasskey, PasskeyCredential, RegistrationInfo, User} from '../types';
+import { isoBase64URL } from '@simplewebauthn/server/helpers';
 import {
   AuthenticatorDevice,
   AuthenticatorTransportFuture,
   PublicKeyCredentialDescriptorFuture
 } from '@simplewebauthn/typescript-types';
-
-export function getNewChallenge() {
-  return Math.random().toString(36).substring(2);
-}
-
-export function convertChallenge(challenge: string): string {
-  const buf = Buffer.from(challenge, 'utf8');
-  return buf.toString('base64');
-}
 
 function uintToString(a) {
   const base64string = btoa(String.fromCharCode(...a));
@@ -25,20 +17,9 @@ function base64ToUint8Array(str) {
   return new Uint8Array(Array.prototype.map.call(atob(str), (c) => c.charCodeAt(0)));
 }
 
-/*
-export function getSavedAuthenticatorData(user: User): PasskeyCredential {
-  return {
-    credentialID: base64ToUint8Array(user.credentials.credentialID),
-    credentialPublicKey: base64ToUint8Array(user.credentials.credentialPublicKey),
-    counter: user.credentials.counter,
-  }
-}
-
- */
-
 export function convertAuthenticator(cred: DevicePasskey): PublicKeyCredentialDescriptorFuture {
   return {
-    id: cred.credentialID,
+    id: cred.credentialID ,
     type: 'public-key',
     transports: cred.transports,
   }
@@ -47,7 +28,7 @@ export function convertAuthenticator(cred: DevicePasskey): PublicKeyCredentialDe
 export function getRegistrationInfo(registrationInfo: RegistrationInfo): DevicePasskey {
   const { credentialPublicKey, counter, credentialID } = registrationInfo;
   return {
-    credentialID: uintToString(credentialID),
+    credentialID,
     credentialPublicKey: uintToString(credentialPublicKey),
     counter
   }
@@ -78,7 +59,7 @@ export function getDeviceRegistrationInfo(registrationInfo: RegistrationInfo, tr
   const { credentialPublicKey, counter, credentialID } = registrationInfo;
 
   return {
-    credentialID: uintToString(credentialID),
+    credentialID,
     credentialPublicKey: uintToString(credentialPublicKey),
     counter,
     transports: getTransports(transports),

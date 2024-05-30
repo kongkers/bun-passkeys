@@ -58,7 +58,7 @@ export type PasskeyCredential = {
 }
 
 export type DevicePasskey = {
-  credentialID: string;
+  credentialID: BufferSource;
   credentialPublicKey: string;
   counter: number;
   transports?: AuthenticatorTransportFuture[];

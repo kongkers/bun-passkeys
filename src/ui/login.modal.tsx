@@ -14,7 +14,7 @@ import {startAuthentication} from '@simplewebauthn/browser';
 
 type LoginProps = {
   isOpen: boolean;
-  onClose: Function;
+  onClose: () => void;
   showSuccess?: Function;
 }
 
