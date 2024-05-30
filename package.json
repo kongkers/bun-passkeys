@@ -1,0 +1,31 @@
+{
+  "name": "bun-passkeys",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@simplewebauthn/typescript-types": "^8.3.4",
+    "@types/bun": "latest",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "start": "bun --watch run index.ts",
+    "build:ui": "rm -rf dist && bun build ./src/ui/index.tsx --outdir ./dist --minify --watch"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
+    "@elysiajs/static": "^1.0.3",
+    "@simplewebauthn/browser": "^10.0.0",
+    "@simplewebauthn/server": "^10.0.0",
+    "axios": "^1.7.2",
+    "elysia": "^1.0.22",
+    "mongodb": "^6.6.2",
+    "prettier": "^3.2.5",
+    "react": "^19.0.0-rc-935180c7e0-20240524",
+    "react-dom": "^19.0.0-rc-935180c7e0-20240524",
+    "uuid": "^9.0.1"
+  }
+}
