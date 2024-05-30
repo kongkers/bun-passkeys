@@ -1,0 +1,42 @@
+env:
+  commonjs: true
+  es6: true
+  node: true
+  jest: true
+parser: '@typescript-eslint/parser'
+plugins:
+  - security
+  - prettier
+  - yaml
+  - '@typescript-eslint'
+extends:
+  - airbnb-base
+  - prettier
+  - plugin:@typescript-eslint/recommended
+  - plugin:security/recommended
+  - plugin:yaml/recommended
+settings:
+  import/resolver:
+    typescript:
+globals:
+  Atomics: readonly
+  SharedArrayBuffer: readonly
+  expect: true
+  sinon: true
+  stub: true
+  testHelpers: true
+parserOptions:
+  ecmaVersion: 2020
+rules:
+  security/detect-object-injection: off
+  import/prefer-default-export: off
+  implicit-arrow-linebreak: off
+  padded-blocks: off
+  '@typescript-eslint/no-explicit-any': off
+  arrow-parens: off
+  no-else-return: off
+  no-underscore-dangle: off
+  prefer-promise-reject-errors: off
+  import/extensions:
+    - error
+    - js: ignorePackages
